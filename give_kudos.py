@@ -14,11 +14,11 @@ class KudosGiver:
     def __init__(self, max_run_duration=540) -> None:
         self.EMAIL = os.environ.get('STRAVA_EMAIL')
         self.PASSWORD = os.environ.get('STRAVA_PASSWORD')
-        self.tg_token = os.environ.get('TELEGRAM_LHF_TOKEN')
-        self.tg_chat_id = os.environ.get('TELEGRAM_LHF_CHAT_ID')
+        self.TG_TOKEN = os.environ.get('TELEGRAM_LHF_TOKEN')
+        self.TG_CHAT_ID = os.environ.get('TELEGRAM_LHF_CHAT_ID')
 
-        if self.EMAIL is None or self.PASSWORD is None:
-            raise Exception(f"Must set environ variables EMAIL AND PASSWORD. \
+        if self.EMAIL is None or self.PASSWORD is None or self.TG_TOKEN is None or self.TG_CHAT_ID is None :
+            raise Exception(f"Must set environ variables EMAIL, PASSWORD, TELEGRAM API. \
                 e.g. run export STRAVA_EMAIL=YOUR_EMAIL")
 
         self.max_run_duration = max_run_duration
@@ -31,9 +31,9 @@ class KudosGiver:
         self.page = self.browser.new_page()
 
     def _send_telegram_message(self, message):
-        url = f"https://api.telegram.org/bot{self.tg_token}/sendMessage"
+        url = f"https://api.telegram.org/bot{self.TG_TOKEN}/sendMessage"
         payload = {
-            "chat_id": self.tg_chat_id,
+            "chat_id": self.TG_CHAT_ID,
             "text": message
         }
         headers = {
