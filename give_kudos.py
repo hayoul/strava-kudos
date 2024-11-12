@@ -29,7 +29,7 @@ class KudosGiver:
         self.browser = p.firefox.launch() # does not work in chrome
         self.page = self.browser.new_page()
 
-    def send_telegram_message(message, token=tg_token, chat_id=tg_chat_id):
+    def send_telegram_message(message, token=self.tg_token, chat_id=self.tg_chat_id):
         url = f"https://api.telegram.org/bot{token}/sendMessage"
         payload = {
             "chat_id": chat_id,
