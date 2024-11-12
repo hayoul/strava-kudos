@@ -13,6 +13,8 @@ class KudosGiver:
     def __init__(self, max_run_duration=540) -> None:
         self.EMAIL = os.environ.get('STRAVA_EMAIL')
         self.PASSWORD = os.environ.get('STRAVA_PASSWORD')
+        self.tg_token = os.environ.get('TELEGRAM_LHF_TOKEN')
+        self.tg_chat_id = os.environ.get('TELEGRAM_LHF_CHAT_ID')
 
         if self.EMAIL is None or self.PASSWORD is None:
             raise Exception(f"Must set environ variables EMAIL AND PASSWORD. \
@@ -27,6 +29,20 @@ class KudosGiver:
         self.browser = p.firefox.launch() # does not work in chrome
         self.page = self.browser.new_page()
 
+    def send_telegram_message(message, token=tg_token, chat_id=tg_chat_id):
+        url = f"https://api.telegram.org/bot{token}/sendMessage"
+        payload = {
+            "chat_id": chat_id,
+            "text": message
+        }
+        headers = {
+            "Content-Type": "application/json"
+        }
+        response = requests.post(url, json=payload, headers=headers)
+        if response.status_code == 200:
+            print("Telegram message sent successfully.")
+        else:
+            print(f"Failed to send Telegram message. Status code: {response.status_code}, Response: {response.text}")
 
     def email_login(self):
         """
@@ -99,6 +115,7 @@ class KudosGiver:
                     participant = web_feed.get_by_test_id("entry-header").nth(j)
                     # ignore own activities
                     if not self.is_participant_me(participant):
+                        send_telegram_message(participant)
                         kudos_container = web_feed.get_by_test_id("kudos_comments_container").nth(j)
                         button = self.find_unfilled_kudos_button(kudos_container)
                         given_count += self.click_kudos_button(unfilled_kudos_container=button)
@@ -108,6 +125,7 @@ class KudosGiver:
                     button = self.find_unfilled_kudos_button(web_feed)
                     given_count += self.click_kudos_button(unfilled_kudos_container=button)
         print(f"\nKudos given: {given_count}")
+        send_telegram_message(f"Kudos given: {given_count}")
         return given_count
     
     def is_club_post(self, container) -> bool:
