@@ -8,6 +8,8 @@ on:
 env:
   STRAVA_EMAIL: ${{ secrets.STRAVA_EMAIL }}
   STRAVA_PASSWORD: ${{ secrets.STRAVA_PASSWORD }}
+  TELEGRAM_LHF_CHAT_ID: ${{ secrets.TELEGRAM_LHF_CHAT_ID }}
+  TELEGRAM_LHF_TOKEN: ${{ secrets.TELEGRAM_LHF_TOKEN }}
 jobs:
   run-kudos-cron:
     runs-on: ubuntu-20.04
