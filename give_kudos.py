@@ -129,7 +129,7 @@ class KudosGiver:
                     button = self.find_unfilled_kudos_button(web_feed)
                     given_count += self.click_kudos_button(unfilled_kudos_container=button)
         print(f"\nKudos given: {given_count}")
-        self.send_telegram(f"Kudos given: {given_count}")
+        self.send_telegram(given_count)
         return given_count
     
     def is_club_post(self, container) -> bool:
