@@ -1,10 +1,12 @@
 import os
 import time
 import requests
-
+import telegram
 from playwright.sync_api import sync_playwright
 
 BASE_URL = "https://www.strava.com/"
+TG_TOKEN = os.environ.get('TELEGRAM_LHF_TOKEN')
+TG_CHAT_ID = os.environ.get('TELEGRAM_LHF_CHAT_ID')
 
 class KudosGiver:
     """
@@ -14,8 +16,7 @@ class KudosGiver:
     def __init__(self, max_run_duration=540) -> None:
         self.EMAIL = os.environ.get('STRAVA_EMAIL')
         self.PASSWORD = os.environ.get('STRAVA_PASSWORD')
-        self.TG_TOKEN = os.environ.get('TELEGRAM_LHF_TOKEN')
-        self.TG_CHAT_ID = os.environ.get('TELEGRAM_LHF_CHAT_ID')
+
 
         if self.EMAIL is None or self.PASSWORD is None or self.TG_TOKEN is None or self.TG_CHAT_ID is None :
             raise Exception(f"Must set environ variables EMAIL, PASSWORD, TELEGRAM API. \
@@ -30,10 +31,13 @@ class KudosGiver:
         self.browser = p.firefox.launch() # does not work in chrome
         self.page = self.browser.new_page()
 
-    def _send_telegram_message(self, message):
-        url = f"https://api.telegram.org/bot{self.TG_TOKEN}/sendMessage"
+    def send_message(message):
+        bot = telegram.Bot(token=TG_TOKEN)
+        bot.send_message(chat_id=TG_CHAT_ID, text=message)
+    def _send_telegram_message(message):
+        url = f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage"
         payload = {
-            "chat_id": self.TG_CHAT_ID,
+            "chat_id": TG_CHAT_ID,
             "text": message
         }
         headers = {
@@ -116,7 +120,6 @@ class KudosGiver:
                     participant = web_feed.get_by_test_id("entry-header").nth(j)
                     # ignore own activities
                     if not self.is_participant_me(participant):
-                        self._send_telegram_message(message=participant)
                         kudos_container = web_feed.get_by_test_id("kudos_comments_container").nth(j)
                         button = self.find_unfilled_kudos_button(kudos_container)
                         given_count += self.click_kudos_button(unfilled_kudos_container=button)
@@ -126,7 +129,7 @@ class KudosGiver:
                     button = self.find_unfilled_kudos_button(web_feed)
                     given_count += self.click_kudos_button(unfilled_kudos_container=button)
         print(f"\nKudos given: {given_count}")
-        self._send_telegram_message(message=f"Kudos given: {given_count}")
+        self.send_message(f"Kudos given: {given_count}")
         return given_count
     
     def is_club_post(self, container) -> bool:
