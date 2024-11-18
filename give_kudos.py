@@ -18,7 +18,7 @@ class KudosGiver:
         self.PASSWORD = os.environ.get('STRAVA_PASSWORD')
 
 
-        if self.EMAIL is None or self.PASSWORD is None or self.TG_TOKEN is None or self.TG_CHAT_ID is None :
+        if self.EMAIL is None or self.PASSWORD is None or TG_TOKEN is None or TG_CHAT_ID is None :
             raise Exception(f"Must set environ variables EMAIL, PASSWORD, TELEGRAM API. \
                 e.g. run export STRAVA_EMAIL=YOUR_EMAIL")
 
