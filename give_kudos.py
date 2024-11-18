@@ -31,7 +31,7 @@ class KudosGiver:
         self.browser = p.firefox.launch() # does not work in chrome
         self.page = self.browser.new_page()
 
-    def send_message(message):
+    def send_telegram(message):
         bot = telegram.Bot(token=TG_TOKEN)
         bot.send_message(chat_id=TG_CHAT_ID, text=message)
     def _send_telegram_message(message):
@@ -129,7 +129,7 @@ class KudosGiver:
                     button = self.find_unfilled_kudos_button(web_feed)
                     given_count += self.click_kudos_button(unfilled_kudos_container=button)
         print(f"\nKudos given: {given_count}")
-        self.send_message(f"Kudos given: {given_count}")
+        self.send_telegram(f"Kudos given: {given_count}")
         return given_count
     
     def is_club_post(self, container) -> bool:
