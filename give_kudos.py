@@ -130,7 +130,7 @@ class KudosGiver:
                     given_count += self.click_kudos_button(unfilled_kudos_container=button)
         print(f"\nKudos given: {given_count}")
         self.send_telegram(f"Kudos given: {given_count}")
-        self._send_telegram_message(f"Kudos given: {given_count}")
+        #self._send_telegram_message(f"Kudos given: {given_count}")
 
         return given_count
     
