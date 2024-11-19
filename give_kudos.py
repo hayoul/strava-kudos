@@ -34,7 +34,7 @@ class KudosGiver:
     def send_telegram(self,message):
         bot = telegram.Bot(token=TG_TOKEN)
         bot.send_message(chat_id=TG_CHAT_ID, text=message)
-    def _send_telegram_message(message):
+    def _send_telegram_message(self,message):
         url = f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage"
         payload = {
             "chat_id": TG_CHAT_ID,
@@ -130,6 +130,8 @@ class KudosGiver:
                     given_count += self.click_kudos_button(unfilled_kudos_container=button)
         print(f"\nKudos given: {given_count}")
         self.send_telegram(f"Kudos given: {given_count}")
+        self._send_telegram_message(f"Kudos given: {given_count}")
+
         return given_count
     
     def is_club_post(self, container) -> bool:
