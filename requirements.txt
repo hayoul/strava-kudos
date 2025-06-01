@@ -1,2 +1,2 @@
 playwright==1.30.0
-libdbus-glib-1-2   
+libdbus-glib-1-2==0.114-1
